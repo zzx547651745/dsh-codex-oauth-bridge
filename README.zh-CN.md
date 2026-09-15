@@ -28,15 +28,26 @@ Provider 安装后即可使用。它会自动启用 Provider、为新会话选�
 
 ## 从 npm 安装
 
-DSH Desktop 使用 `tauri` profile；独立浏览器版使用 `web` profile。
-桌面版安装方式：
+不同 DSH Desktop 版本使用不同的 profile。旧版 Tauri 桌面端使用 `tauri`：
 
 ```powershell
 dsh plugin --profile tauri add dsh-codex-oauth-bridge
 ```
 
-重启 DSH Desktop 后，进入「设置 → 插件 → 插件列表」并搜索
-`codex-oauth-bridge`，应显示「已启用 / 运行中」。此插件列表只展示状态，
+DSH Desktop Beta（Electron）默认使用 `desktop`，但以应用内当前选中的
+profile 为准。在 Beta 内打开「DSH 终端」，执行：
+
+```powershell
+dsh plugin add dsh-codex-oauth-bridge
+```
+
+应用内终端会操作当前 profile。独立运行的 `dsh` CLI 会拒绝
+`--profile desktop`，因为该 profile 由 Electron 应用管理。安装前确认
+Beta 当前选中的 profile，安装后重启应用。
+
+重启 DSH Desktop 后，在当前 profile 的插件列表中查找
+`dsh-codex-oauth-bridge`。旧版 Tauri 桌面端的「设置 → 插件 → 插件列表」
+应显示「已启用 / 运行中」。此插件列表只展示状态，
 不能在页面内直接启停；安装或移除当前 profile 的 Bundle 后重启才会生效。
 「设置 → 插件 → Codex 桥接」标签可打开本机登录桥，查看状态并手动发起认证。
 DSH Desktop 的「配置 → 插件」是另一套界面：插件旁显示「禁用」按钮表示当前
@@ -63,7 +74,9 @@ dsh --profile web
 dsh plugin --profile tauri add github:zzx547651745/dsh-codex-oauth-bridge
 ```
 
-随后重启 DSH Desktop。独立 Web 版将 `tauri` 改为 `web`。
+DSH Desktop Beta 的应用内「DSH 终端」改用
+`dsh plugin add github:zzx547651745/dsh-codex-oauth-bridge`。
+随后重启当前桌面 profile。独立 Web 版将 `tauri` 改为 `web`。
 
 ## 从本地源码安装
 
@@ -72,7 +85,9 @@ git clone https://github.com/zzx547651745/dsh-codex-oauth-bridge.git
 dsh plugin --profile tauri add .\dsh-codex-oauth-bridge
 ```
 
-随后重启 DSH Desktop。独立 Web 版将 `tauri` 改为 `web`。
+在源码目录的上级目录打开 DSH Desktop Beta 的应用内「DSH 终端」，改用
+`dsh plugin add .\dsh-codex-oauth-bridge`。安装后重启桌面端。
+独立 Web 版将 `tauri` 改为 `web`。
 
 ## 卸载
 
@@ -80,7 +95,9 @@ dsh plugin --profile tauri add .\dsh-codex-oauth-bridge
 dsh plugin --profile tauri remove dsh-codex-oauth-bridge
 ```
 
-卸载后需要重启 DSH Desktop。独立 Web 版将 `tauri` 改为 `web`。
+DSH Desktop Beta 的应用内「DSH 终端」改用
+`dsh plugin remove dsh-codex-oauth-bridge`。卸载后重启桌面端。
+独立 Web 版将 `tauri` 改为 `web`。
 
 ## 安全说明
 
