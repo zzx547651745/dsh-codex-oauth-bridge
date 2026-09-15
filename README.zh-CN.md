@@ -28,6 +28,25 @@ Provider 安装后即可使用。它会自动启用 Provider、为新会话选�
 
 ## 从 npm 安装
 
+DSH Desktop 使用 `tauri` profile；独立浏览器版使用 `web` profile。
+桌面版安装方式：
+
+```powershell
+dsh plugin --profile tauri add dsh-codex-oauth-bridge
+```
+
+重启 DSH Desktop 后，进入「设置 → 插件 → 插件列表」并搜索
+`codex-oauth-bridge`，应显示「已启用 / 运行中」。此插件列表只展示状态，
+不能在页面内直接启停；安装或移除当前 profile 的 Bundle 后重启才会生效。
+「设置 → 插件 → Codex 桥接」标签可打开本机登录桥，查看状态并手动发起认证。
+DSH Desktop 的「配置 → 插件」是另一套界面：插件旁显示「禁用」按钮表示当前
+已启用；这里不会显示「运行中」。如果显示「启用」，点击后重启 DSH Desktop。
+桥接会随 DSH 自动加载，无法在此卡片中单独启动进程。打开
+<http://127.0.0.1:3081/> 可确认登录桥
+是否运行、凭据是否已保存及新会话默认模型。三者不等于实际模型请求已成功。
+
+独立 Web 版安装方式：
+
 ```powershell
 dsh plugin --profile web add dsh-codex-oauth-bridge
 dsh --profile web
@@ -41,25 +60,27 @@ dsh --profile web
 ## 从 GitHub 安装
 
 ```powershell
-dsh plugin --profile web add github:zzx547651745/dsh-codex-oauth-bridge
-dsh --profile web
+dsh plugin --profile tauri add github:zzx547651745/dsh-codex-oauth-bridge
 ```
+
+随后重启 DSH Desktop。独立 Web 版将 `tauri` 改为 `web`。
 
 ## 从本地源码安装
 
 ```powershell
 git clone https://github.com/zzx547651745/dsh-codex-oauth-bridge.git
-dsh plugin --profile web add .\dsh-codex-oauth-bridge
-dsh --profile web
+dsh plugin --profile tauri add .\dsh-codex-oauth-bridge
 ```
+
+随后重启 DSH Desktop。独立 Web 版将 `tauri` 改为 `web`。
 
 ## 卸载
 
 ```powershell
-dsh plugin --profile web remove dsh-codex-oauth-bridge
+dsh plugin --profile tauri remove dsh-codex-oauth-bridge
 ```
 
-安装或卸载 Bundle 后需要重启 DSH Web profile。
+卸载后需要重启 DSH Desktop。独立 Web 版将 `tauri` 改为 `web`。
 
 ## 安全说明
 
@@ -71,6 +92,8 @@ OAuth 凭据由 DSH 写入其正常的凭据库。请勿分享你的 DSH 凭据�
 
 如果端口 `3081` 已被占用，可以在启动 profile 之前，通过 DSH patch layer 修改
 `codex-oauth-bridge` 配置项中的 `port`。
+占用时插件会记录警告，不会因为登录页无法监听而使 DSH 崩溃；现有模型配置
+仍然可用，但请释放端口或改端口后再使用手动登录页。
 
 ## 许可证
 
