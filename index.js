@@ -150,13 +150,17 @@ export function apply(ctx, config = {}) {
       if (request.method === 'GET' && url.pathname === '/') {
         const ready = ctx.authorization.describe(KEY) !== undefined
         const signedIn = await configured()
+        const selection = ctx.agentDefaultModel.currentSelection()
         const status = signedIn ? '已保存 ChatGPT OAuth 凭据' : lastResult
         const continueLogin = inFlight && currentAuthUrl !== null
           ? `<p><a href="/continue?csrf=${encodeURIComponent(csrf)}" target="_blank" rel="noopener">继续完成 ChatGPT 登录</a></p>`
           : ''
         sendHtml(response, 200, 'DSH Codex 登录桥', `
+          <p>插件：<strong>运行中</strong></p>
           <p>状态：<strong>${escapeHtml(status)}</strong></p>
           <p>授权流程：${ready ? '已就绪' : '尚未注册，请稍后刷新'}</p>
+          <p>新会话默认模型：<code>${escapeHtml(selection.provider)}/${escapeHtml(selection.model)}</code></p>
+          <p><small>凭据已保存不代表每次模型请求都会成功；若对话报错，请查看该会话的具体错误信息。</small></p>
           ${continueLogin}
           <form method="post" action="/login" target="_blank">
             <input type="hidden" name="csrf" value="${csrf}">
@@ -213,12 +217,16 @@ export function apply(ctx, config = {}) {
     }
   })
 
+  server.once('error', (error) => {
+    ctx.logger.warn(`[codex-oauth-bridge] login page unavailable on http://${host}:${port}/`)
+    ctx.logger.warn(error)
+  })
   server.listen(port, host, () => {
     ctx.logger.info(`[codex-oauth-bridge] login page: http://${host}:${port}/`)
-    void autoConfigure().catch((error) => {
-      ctx.logger.warn('[codex-oauth-bridge] automatic setup failed')
-      ctx.logger.warn(error)
-    })
+  })
+  void autoConfigure().catch((error) => {
+    ctx.logger.warn('[codex-oauth-bridge] automatic setup failed')
+    ctx.logger.warn(error)
   })
 
   ctx.effect(() => () => {
