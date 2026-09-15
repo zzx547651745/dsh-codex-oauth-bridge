@@ -29,16 +29,27 @@ OpenAI. Codex, ChatGPT, and OpenAI are trademarks of OpenAI.
 
 ## Install from npm
 
-For DSH Desktop, install into its `tauri` profile (the standalone Web app uses `web`):
+DSH Desktop builds use separate profiles. The older Tauri build uses `tauri`:
 
 ```powershell
 dsh plugin --profile tauri add dsh-codex-oauth-bridge
 ```
 
-Restart DSH Desktop, then open **Settings → Plugins → Plugin list** and search
-for `codex-oauth-bridge`. It should show **Enabled / Running**. This list is
-read-only: activation is controlled by the active profile and requires a
-restart after installation or removal.
+DSH Desktop Beta (Electron) uses its selected profile, `desktop` by default.
+Open **DSH Terminal inside Desktop Beta** and run:
+
+```powershell
+dsh plugin add dsh-codex-oauth-bridge
+```
+
+The in-app terminal targets the active profile. The standalone `dsh` CLI
+rejects `--profile desktop` because Electron manages that profile. Confirm
+the selected profile in Desktop Beta before installing, then restart the app.
+
+Restart DSH Desktop, then inspect its plugin inventory for
+`dsh-codex-oauth-bridge` in the active profile. In the older Tauri build,
+**Settings → Plugins → Plugin list** should show **Enabled / Running**. This
+list is read-only: activation requires a restart after installation or removal.
 The **Codex bridge** tab in Plugins opens the local login page to inspect
 status and start ChatGPT authentication manually.
 DSH Desktop's **Configuration → Plugins** is a separate interface: a
@@ -69,7 +80,10 @@ The manual login and reauthorization page remains available at
 dsh plugin --profile tauri add github:zzx547651745/dsh-codex-oauth-bridge
 ```
 
-Restart DSH Desktop. For the standalone Web app, replace `tauri` with `web`.
+In Desktop Beta's in-app DSH Terminal, use
+`dsh plugin add github:zzx547651745/dsh-codex-oauth-bridge` instead.
+Restart the active Desktop profile. For the standalone Web app, replace
+`tauri` with `web`.
 
 ## Install from a local checkout
 
@@ -78,7 +92,10 @@ git clone https://github.com/zzx547651745/dsh-codex-oauth-bridge.git
 dsh plugin --profile tauri add .\dsh-codex-oauth-bridge
 ```
 
-Restart DSH Desktop. For the standalone Web app, replace `tauri` with `web`.
+In Desktop Beta's in-app DSH Terminal, use
+`dsh plugin add .\dsh-codex-oauth-bridge` from the directory containing the
+checkout. Restart Desktop after installation. For the standalone Web app,
+replace `tauri` with `web`.
 
 ## Remove
 
@@ -86,8 +103,9 @@ Restart DSH Desktop. For the standalone Web app, replace `tauri` with `web`.
 dsh plugin --profile tauri remove dsh-codex-oauth-bridge
 ```
 
-Restart DSH Desktop after removing the bundle. For the standalone Web app,
-replace `tauri` with `web`.
+In Desktop Beta's in-app DSH Terminal, use
+`dsh plugin remove dsh-codex-oauth-bridge`. Restart Desktop after removing
+the bundle. For the standalone Web app, replace `tauri` with `web`.
 
 ## Security
 
